@@ -1,0 +1,5 @@
+/home/dan/Documents/Programming/Minesweeper/Minesweeper/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/dan/Documents/Programming/Minesweeper/Minesweeper/bin/Debug/Minesweeper.exe.mdb
+/home/dan/Documents/Programming/Minesweeper/Minesweeper/bin/Debug/Minesweeper.exe
+/home/dan/Documents/Programming/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe
+/home/dan/Documents/Programming/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe.mdb
