@@ -12,8 +12,8 @@ namespace Minesweeper
 		public const int size = 20;
 		public const int bombCount = 25;
 
-		public static int p1PosX;
-		public static int p1PosY;
+		public static int p1PosX = 0;
+		public static int p1PosY = 0;
 
 		public static ConsoleColor defaultCol = ConsoleColor.Gray;
 
@@ -29,11 +29,26 @@ namespace Minesweeper
 			{
 				bool Update = false;
 				ConsoleKey currentKey = System.Console.ReadKey (true).Key;
-				if (currentKey == ConsoleKey.UpArrow) {
+				if (currentKey == ConsoleKey.RightArrow) {
+					if (p1PosX < size - 1)
+						p1PosX++;
+				}
+				if (currentKey == ConsoleKey.LeftArrow) {
+						if (p1PosX > 0)
+							p1PosX--;
+					}
 					
+				if (currentKey == ConsoleKey.DownArrow) {
+					if (p1PosY < size - 1)
+						p1PosY++;
+				}
+				if (currentKey == ConsoleKey.UpArrow) {
+					if (p1PosY > 0)
+						p1PosY--;
+				}
 					Update = true;
 
-				}
+
 
 				if (Update)
 					drawGrid (size);
@@ -79,9 +94,15 @@ namespace Minesweeper
 				Console.CursorLeft = 0;
 				for (int x = 0; x < gridSize; x++) {
 					if (tiles [x, y].bomb == true) {
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.Write (" * ");
-						Console.ForegroundColor = defaultCol;
+						if (x == p1PosX && y == p1PosY) {
+							Console.ForegroundColor = ConsoleColor.Yellow;
+							Console.Write (" * ");
+							Console.ForegroundColor = defaultCol;
+						} else {
+							Console.ForegroundColor = ConsoleColor.Red;
+							Console.Write (" * ");
+							Console.ForegroundColor = defaultCol;
+						}
 					} else {
 						int value = 0;
 						Avail[,] areas = GetAvailableAreas (gridSize, x, y);
@@ -96,7 +117,15 @@ namespace Minesweeper
 						}			
 
 						tiles [x, y].value = value;
-						Console.Write (" {0} ", tiles [x, y].value);
+
+						if (x == p1PosX && y == p1PosY) {
+							Console.ForegroundColor = ConsoleColor.Yellow;
+							Console.Write (" {0} ", tiles [x, y].value);
+							Console.ForegroundColor = defaultCol;
+						}
+						else
+							Console.Write (" {0} ", tiles [x, y].value);
+
 								
 					}
 
@@ -105,7 +134,6 @@ namespace Minesweeper
 			}
 			Console.CursorLeft = 0;
 			Console.CursorTop = 0;
-			Console.Write ("Hits: {0}", hits);
 
 		}
 		public enum Avail
