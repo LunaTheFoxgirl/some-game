@@ -62,8 +62,10 @@ namespace Minesweeper
 						Console.CursorTop = Console.CursorTop - 1;
 						Console.Write ("╔═════════════════════╖");
 						Console.CursorTop = size / 2;
+						Console.CursorLeft = size;
 						Console.Write ("║GAME OVER! YOU SUCK. ║");
 						Console.CursorTop = Console.CursorTop + 1;
+						Console.CursorLeft = size;
 						Console.Write ("╚═════════════════════╝");
 
 					}
