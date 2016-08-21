@@ -46,12 +46,29 @@ namespace Minesweeper
 					if (p1PosY > 0)
 						p1PosY--;
 				}
-					Update = true;
 
+
+					Update = true;
 
 
 				if (Update)
 					drawGrid (size);
+				
+				if (currentKey == ConsoleKey.Spacebar) {
+					if (tiles [p1PosX, p1PosY].bomb) {  						
+						Running = false;
+						Console.CursorLeft = size;
+						Console.CursorTop = size / 2;
+						Console.CursorTop = Console.CursorTop - 1;
+						Console.Write ("╔═════════════════════╖");
+						Console.CursorTop = size / 2;
+						Console.Write ("║GAME OVER! YOU SUCK. ║");
+						Console.CursorTop = Console.CursorTop + 1;
+						Console.Write ("╚═════════════════════╝");
+
+					}
+
+				}
 
 
 				Thread.Sleep (1);
