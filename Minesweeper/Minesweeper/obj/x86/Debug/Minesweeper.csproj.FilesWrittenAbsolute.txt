@@ -8,3 +8,8 @@
 /home/dan/GIT/some-game/Minesweeper/Minesweeper/bin/Debug/Minesweeper.exe
 /home/dan/GIT/some-game/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe
 /home/dan/GIT/some-game/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe.mdb
+/home/eclipsingdev/Code/some-game/Minesweeper/Minesweeper/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/eclipsingdev/Code/some-game/Minesweeper/Minesweeper/bin/Debug/Minesweeper.exe.mdb
+/home/eclipsingdev/Code/some-game/Minesweeper/Minesweeper/bin/Debug/Minesweeper.exe
+/home/eclipsingdev/Code/some-game/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe
+/home/eclipsingdev/Code/some-game/Minesweeper/Minesweeper/obj/x86/Debug/Minesweeper.exe.mdb

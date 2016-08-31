@@ -1,1 +1,13 @@
-﻿<Properties StartupItem="Minesweeper/Minesweeper.csproj" />
+﻿<Properties StartupItem="Minesweeper/Minesweeper.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Minesweeper/Program.cs">
+    <Files>
+      <File FileName="Minesweeper/Program.cs" Line="77" Column="41" />
+      <File FileName="Minesweeper/Tile.cs" Line="78" Column="42" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

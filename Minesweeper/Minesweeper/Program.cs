@@ -5,145 +5,192 @@ using System.Threading;
 
 namespace Minesweeper
 {
-	class MainClass
+	public class MainClass
 	{
+		private static bool generated = false;
 		public static Random ran = new Random();
 		public static Tile[,] tiles;
-		public const int size = 20;
-		public const int bombCount = 25;
+		public const int sizex = 10;
+		public const int sizey = 20;
+		public const int bombCount = 9;
 
 		public static int p1PosX = 0;
 		public static int p1PosY = 0;
 
 		public static ConsoleColor defaultCol = ConsoleColor.Gray;
 
-		public static void Main (string[] args)
+		public static void Main(string[] args)
 		{
 			bool Running = true;
 			Console.CursorVisible = false;
-				populateGame (size, bombCount);
-				drawGrid (size);
-
+			populateGame(sizex, sizey, -1);
+			drawGrid(sizex, sizey);
 				
-			while(Running)
+			while (Running)
 			{
 				bool Update = false;
-				ConsoleKey currentKey = System.Console.ReadKey (true).Key;
-				if (currentKey == ConsoleKey.RightArrow) {
-					if (p1PosX < size - 1)
+				ConsoleKey currentKey = System.Console.ReadKey(true).Key;
+				if (currentKey == ConsoleKey.RightArrow)
+				{
+					if (p1PosX < sizex - 1)
 						p1PosX++;
 				}
-				if (currentKey == ConsoleKey.LeftArrow) {
-						if (p1PosX > 0)
-							p1PosX--;
-					}
+				if (currentKey == ConsoleKey.LeftArrow)
+				{
+					if (p1PosX > 0)
+						p1PosX--;
+				}
 					
-				if (currentKey == ConsoleKey.DownArrow) {
-					if (p1PosY < size - 1)
+				if (currentKey == ConsoleKey.DownArrow)
+				{
+					if (p1PosY < sizey - 1)
 						p1PosY++;
 				}
-				if (currentKey == ConsoleKey.UpArrow) {
+				if (currentKey == ConsoleKey.UpArrow)
+				{
 					if (p1PosY > 0)
 						p1PosY--;
 				}
 
-
-					Update = true;
-
-
-				if (Update)
-					drawGrid (size);
-				
-				if (currentKey == ConsoleKey.Spacebar) {
-					if (tiles [p1PosX, p1PosY].bomb) {  						
+				if (currentKey == ConsoleKey.Spacebar || currentKey == ConsoleKey.Enter)
+				{
+					if (!generated)
+					{
+						populateGame(sizex, sizey, bombCount);
+						generated = true;
+						tiles[p1PosX, p1PosY].hidden = false;
+					}
+					if (tiles[p1PosX, p1PosY].bomb)
+					{  		
+						foreach (Tile t in tiles)
+							t.hidden = false;
+						drawGrid(sizex, sizey);				
 						Running = false;
-						Console.CursorLeft = size;
-						Console.CursorTop = size / 2;
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.CursorLeft = (Console.BufferWidth / 2) - (sizex / 2);
+						Console.CursorTop = (Console.BufferHeight / 2) - (sizey / 2);
 						Console.CursorTop = Console.CursorTop - 1;
-						Console.Write ("╔═════════════════════╖");
-						Console.CursorTop = size / 2;
-						Console.CursorLeft = size;
-						Console.Write ("║GAME OVER! YOU SUCK. ║");
+						Console.Write("╔═════════════════════╖");
+						Console.CursorTop = (Console.BufferHeight / 2) - (sizey / 2);
+						Console.CursorLeft = sizex;
+						Console.Write("║GAME OVER! YOU SUCK. ║");
 						Console.CursorTop = Console.CursorTop + 1;
-						Console.CursorLeft = size;
-						Console.Write ("╚═════════════════════╝");
-
+						Console.CursorLeft = sizex;
+						Console.Write("╚═════════════════════╝");
+						Console.ForegroundColor = defaultCol;
+					}
+					else
+					{
+						if (tiles[p1PosX, p1PosY].value == 0)
+						{
+							tiles[p1PosX, p1PosY].FloodFillNone(sizex, sizey, p1PosX, p1PosY, ref tiles);
+						}
+						else
+						{
+							tiles[p1PosX, p1PosY].hidden = false;
+						}
+						drawGrid(sizex, sizey);
 					}
 
 				}
-
-
-				Thread.Sleep (1);
+				if (Running)
+					drawGrid(sizex, sizey);
+				Thread.Sleep(1);
 			}
 
-				Console.ReadKey ();
+			Console.ReadKey();
 
 			
 		}
 
-		public static void populateGame (int gridSize, int bombCount)
+		public static void populateGame(int sizex, int sizey, int bombCount)
 		{
-			tiles = new Tile[gridSize, gridSize];
-			for (int y = 0; y < gridSize; y++)
-				for (int x = 0; x < gridSize; x++) {
-					tiles [x, y] = new Tile (x, y, 0, false);
-				}
-
-
-			//Bomb placement
-
-			int bombAmount = 0;
-			while (bombAmount < bombCount) {
-				int x = ran.Next (gridSize);
-				int y = ran.Next (gridSize);
-				if (tiles [x, y].bomb == false) {
-					tiles [x, y].bomb = true;
-					bombAmount++;				
-				}
-
-			}
+			if (bombCount > 0)
+			{
+				tiles = new Tile[sizex, sizey];
+				for (int y = 0; y < sizey; y++)
+					for (int x = 0; x < sizex; x++)
+					{
+						tiles[x, y] = new Tile(x, y, 0, false);
+					}
 				
+
+				//Bomb placement
+
+				int bombAmount = 0;
+				while (bombAmount < bombCount)
+				{
+					int x = ran.Next(sizex);
+					int y = ran.Next(sizey);
+					if (tiles[x, y].bomb == false && x != p1PosX && y != p1PosY)
+					{
+						tiles[x, y].value = 666;
+						tiles[x, y].bomb = true;
+						bombAmount++;				
+					}
+
+				}
+				tiles[0, 0].AssignValues(sizex, sizey, 0, 0, ref tiles);
+			}
+			else
+			{
+				tiles = new Tile[sizex, sizey];
+				for (int y = 0; y < sizey; y++)
+					for (int x = 0; x < sizex; x++)
+					{
+						tiles[x, y] = new Tile(x, y, -1, false);
+					}
+			}
 		}
 
-		public static void drawGrid(int gridSize)
+		public static void drawGrid(int sizex, int sizey)
 		{
 			
-			for (int y = 0; y < gridSize; y++) {
+			for (int y = 0; y < sizey; y++)
+			{
 				Console.CursorTop = y;
 				Console.CursorLeft = 0;
-				for (int x = 0; x < gridSize; x++) {
-					if (tiles [x, y].bomb == true) {
-						if (x == p1PosX && y == p1PosY) {
-							Console.ForegroundColor = ConsoleColor.Yellow;
-							Console.Write (" * ");
-							Console.ForegroundColor = defaultCol;
-						} else {
-							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write (" * ");
-							Console.ForegroundColor = defaultCol;
-						}
-					} else {
-						int value = 0;
-						Avail[,] areas = GetAvailableAreas (gridSize, x, y);
-						for (int x2 = -1; x2 < 2; x2++) {
-							for (int y2 = -1; y2 < 2; y2++) {
-								if (areas [x2+1, y2+1] == Avail.InBounds) {
-									if (tiles [x + x2, y + y2].bomb) {
-										value++;
-									}
-								}
+				for (int x = 0; x < sizex; x++)
+				{
+					if (tiles[x, y].bomb == true)
+					{
+						if (!tiles[x, y].hidden)
+						{
+							if (x == p1PosX && y == p1PosY)
+							{
+								Console.ForegroundColor = ConsoleColor.Yellow;
+								Console.Write(" * ");
+								Console.ForegroundColor = defaultCol;
 							}
-						}			
-
-						tiles [x, y].value = value;
-
-						if (x == p1PosX && y == p1PosY) {
+							else
+							{
+								Console.ForegroundColor = ConsoleColor.Red;
+								Console.Write(" * ");
+								Console.ForegroundColor = defaultCol;
+							}
+						}
+						else
+						{
+							if (x == p1PosX && y == p1PosY)
+							{
+								Console.ForegroundColor = ConsoleColor.Yellow;
+								Console.Write(">{0}<", tiles[x, y].GetValueStr());
+								Console.ForegroundColor = defaultCol;
+							}
+							else
+								Console.Write(" {0} ", tiles[x, y].GetValueStr());
+						}
+					}
+					else
+					{			
+						if (x == p1PosX && y == p1PosY)
+						{
 							Console.ForegroundColor = ConsoleColor.Yellow;
-							Console.Write (" {0} ", tiles [x, y].value);
+							Console.Write(">{0}<", tiles[x, y].GetValueStr());
 							Console.ForegroundColor = defaultCol;
 						}
 						else
-							Console.Write (" {0} ", tiles [x, y].value);
+							Console.Write(" {0} ", tiles[x, y].GetValueStr());
 
 								
 					}
@@ -155,34 +202,39 @@ namespace Minesweeper
 			Console.CursorTop = 0;
 
 		}
+
 		public enum Avail
 		{
 			OutOfBounds = 0,
 			InBounds = 1
 		}
 
-		public static Avail[,] GetAvailableAreas(int size, int x, int y)
+		public static Avail[,] GetAvailableAreas(int sizex, int sizey, int x, int y)
 		{
 			Avail[,] result = new Avail[3, 3];
 			for (int ax = 0; ax < 3; ax++)
 				for (int ay = 0; ay < 3; ay++)
-					result [ax, ay] = Avail.InBounds;
+					result[ax, ay] = Avail.InBounds;
 
-			if ((x - 1) < 0) {
+			if ((x - 1) < 0)
+			{
 				for (int i = 0; i < 3; i++)
-					result [0, i] = Avail.OutOfBounds;
+					result[0, i] = Avail.OutOfBounds;
 			}
-			if ((x + 1) > (size - 1)) {
+			if ((x + 1) > (sizex - 1))
+			{
 				for (int i = 0; i < 3; i++)
-					result [2, i] = Avail.OutOfBounds;
+					result[2, i] = Avail.OutOfBounds;
 			}
-			if ((y - 1) < 0) {
+			if ((y - 1) < 0)
+			{
 				for (int i = 0; i < 3; i++)
-					result [i, 0] = Avail.OutOfBounds;
+					result[i, 0] = Avail.OutOfBounds;
 			}	
-			if ((y + 1) > (size - 1)) {
+			if ((y + 1) > (sizey - 1))
+			{
 				for (int i = 0; i < 3; i++)
-					result [i, 2] = Avail.OutOfBounds;
+					result[i, 2] = Avail.OutOfBounds;
 			}	
 			return result;
 		}
